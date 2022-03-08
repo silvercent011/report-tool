@@ -1,31 +1,45 @@
 <template>
-    <div class="container d-flex flex-row justify-content-center min-vh-100">
-        <div class="w-100">
-            <div class="card" v-for="(std,index) in students" :key="index">
-                <div class="card-body">
-                    <p class="card-text">{{std}}</p>
-                </div>
-            </div>
-        </div>
-    </div>
+    <ul class="nav nav-pills bg-light p-2">
+        <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Alunos Ativos</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="#">Alunos Desativados</a>
+        </li>
+    </ul>
+    <StudentsList :students="activeStudents" />
 </template>
 
 <script lang="ts">
+import StudentsList from '@/components/StudentsList.vue';
 import { useStudentsStore } from '@/stores/students'
 import { computed, defineComponent } from 'vue'
 
 export default defineComponent({
-    setup() {
-        const studentsStore = useStudentsStore()
-        studentsStore.getAllStudents()
+    async setup() {
+        const studentsStore = useStudentsStore();
+        await studentsStore.getAllStudents();
         const students = computed(() => {
-            return Promise.all(studentsStore.students.filter((student) => {
-                if (student.enabled === true){
-                    return student
+            return studentsStore.students;
+        });
+        const activeStudents = computed(() => {
+            return students.value.filter((student) => {
+                if (student.enabled === true) {
+                    return student;
                 }
-            }))
-        })
-        return { students }
+            });
+        });
+        const nonActiveStudents = computed(() => {
+            return students.value.filter((student) => {
+                if (student.enabled === false) {
+                    return student;
+                }
+            });
+        });
+
+        return { activeStudents };
     },
+    components: { StudentsList }
 })
 </script>
