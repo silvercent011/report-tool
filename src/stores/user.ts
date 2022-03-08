@@ -1,12 +1,26 @@
 import { defineStore } from "pinia";
 import axios from 'axios'
+import router from "@/router";
 
 const API: string = <string>import.meta.env.VITE_GREENWICH_URL
-console.log(API)
+
+interface iUser {
+    _id: string;
+    level: string;
+    created: string;
+    updated: string;
+    cpf: string;
+    email: string;
+    nome: string;
+    token: string;
+    passed: boolean;
+
+}
+
 export const useUserStore = defineStore('user', {
     state: () => {
         return {
-            userData: {}
+            userData: {} as iUser
         }
     },
     actions: {
@@ -17,8 +31,13 @@ export const useUserStore = defineStore('user', {
             }
             await axios.post(`${API}/users/auth`, dataSend).then((data) => {
                 this.userData = data.data
-                alert(data.data)
+                router.replace({ name: 'Home' })
             })
+        },
+
+        signout() {
+            this.userData = {} as iUser
+            router.replace({ name: 'Index' })
         }
     }
 })
