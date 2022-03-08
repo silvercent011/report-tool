@@ -4,8 +4,8 @@
             <div class="row g-0 h-100">
                 <div
                     class="col-md-4"
-                    v-if="student.img_url == null"
-                    :style="`background-image: url('http://colegiojpi.com/photoalunos/${student.matricula}.jpg')`"
+                    v-if="student.img_url != null"
+                    :style="`background-image: url('${student.img_url}')`"
                     style="background-size: cover; background-position: center;"
                 ></div>
                 <div class="col-md-8">
